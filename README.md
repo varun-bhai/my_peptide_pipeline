@@ -1,16 +1,22 @@
-# Modified Peptide Structure Predictor
+# Hybrid Peptide Structure Prediction Pipeline
 
-A fully automated bioinformatics pipeline for predicting the 3D structures of chemically modified peptides and non-canonical amino acids. 
+This repository contains an automated, hybrid computational pipeline for predicting the 3D structures of chemically modified peptides, specifically those containing non-canonical amino acids (NCAAs) and other synthetic modifications.
 
-This tool seamlessly integrates canonical backbone prediction (via AlphaFold2/ESMFold) with side-chain conformer generation (via ETFlow) and structural minimization (via OpenBabel).
+## 🧬 Pipeline Architecture
 
-## 🚀 Architecture
-To prevent dependency conflicts between deep learning frameworks, this pipeline utilizes a master orchestrator (`main.py`) to automatically hand off tasks between two isolated Conda environments.
+This tool automates a 5-step process to generate highly accurate structural predictions:
+1. **Sequence Parsing:** Maps canonical backbones and identifies non-canonical modifications.
+2. **Backbone Prediction:** Predicts the canonical backbone structure.
+3. **Side-Chain Generation (ETFlow):** Generates 3D conformers for non-canonical amino acids using the ETFlow Chemical Language Model.
+4. **Stitching (BioPython):** Mathematically aligns and snaps the modified side-chains onto the predicted backbone.
+5. **Minimization (OpenBabel):** Relaxes the final structure to resolve spatial clashes and optimize physical geometry.
 
-## 🛠️ Prerequisites & Installation
+## 🚀 Quick Start (Google Colab)
 
-### 1. Install System Dependencies
-You will need Conda (Miniconda/Anaconda) and OpenBabel installed on your system.
-```bash
-# Example for Ubuntu/Debian
-sudo apt-get install openbabel
+The easiest way to run this pipeline without local installation is via our pre-configured Google Colab environment.
+
+1. Open the `run_peptide_pipeline.ipynb` notebook in Google Colab.
+2. Run the environment setup cells to automatically build Conda, ETFlow, and necessary dependencies.
+3. Execute the master script:
+   ```bash
+   python main.py --sequence "KET(AIB)AAKFERQHLDS" --json "modifications.json"
